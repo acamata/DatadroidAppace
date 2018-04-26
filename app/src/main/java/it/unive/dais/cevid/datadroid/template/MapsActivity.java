@@ -159,11 +159,13 @@ public class MapsActivity extends AppCompatActivity
     // ciclo di vita della app
     //
 
+
+    /*
     @Override
     protected void onStart() {
         super.onStart();
     }
-
+*/
     @Override
     protected void onStop() {
         super.onStop();
@@ -172,11 +174,12 @@ public class MapsActivity extends AppCompatActivity
     /**
      * Applica le impostazioni (preferenze) della mappa ad ogni chiamata.
      */
+    /*
     @Override
     protected void onResume() {
         super.onResume();
         applyMapSettings();
-    }
+    }*/
 
     @Override
     protected void onPause() {
@@ -484,6 +487,7 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public boolean onMarkerClick(final Marker marker) {
         marker.showInfoWindow();
+
         button_car.setVisibility(View.VISIBLE);
         button_car.setOnClickListener(new View.OnClickListener() {
             @Override

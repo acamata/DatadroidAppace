@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="it.unive.dais.cevid.datadroid.template" >
+    package="it.unive.dais.cevid.datadroid.template">
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -12,7 +12,6 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <application
         android:allowBackup="false"
@@ -34,9 +33,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+
         <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" >
+            android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -45,11 +44,27 @@
         </activity>
 
         <activity
-            android:name=".AboutActivity"
-            android:parentActivityName=".MapsActivity">
+            android:name=".MapsActivity"
+            android:parentActivityName=".HomeActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MapsActivity" />
+                android:value=".HomeActivity" />
+        </activity>
+
+
+        <activity
+            android:name=".AboutActivity"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
         </activity>
 
         <activity
