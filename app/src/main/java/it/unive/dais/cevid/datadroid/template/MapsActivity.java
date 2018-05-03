@@ -75,10 +75,13 @@ public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener ,GoogleMap.OnInfoWindowClickListener {
 
     protected static final int REQUEST_CHECK_SETTINGS = 500;
     protected static final int PERMISSIONS_REQUEST_ACCESS_BOTH_LOCATION = 501;
+
+
+    ScrollingActivity scrollingActivity = new ScrollingActivity();
     // alcune costanti
     private static final String TAG = "MapsActivity";
     /**
@@ -116,6 +119,7 @@ public class MapsActivity extends AppCompatActivity
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
@@ -138,21 +142,21 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "here button clicked");
-                gpsCheck();
-                updateCurrentPosition();
-                if (hereMarker != null) hereMarker.remove();
-                if (currentPosition != null) {
-                    MarkerOptions opts = new MarkerOptions();
-                    opts.position(currentPosition);
-                    opts.title(getString(R.string.marker_title));
-                    opts.snippet(String.format("lat: %g\nlng: %g", currentPosition.latitude, currentPosition.longitude));
-                    hereMarker = gMap.addMarker(opts);
-                    if (gMap != null)
-                        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, getResources().getInteger(R.integer.zoomFactor_button_here)));
-                } else
-                    Log.d(TAG, "no current position available");
-            }
-        });
+        gpsCheck();
+        updateCurrentPosition();
+        if (hereMarker != null) hereMarker.remove();
+        if (currentPosition != null) {
+            MarkerOptions opts = new MarkerOptions();
+            opts.position(currentPosition);
+            opts.title(getString(R.string.marker_title));
+            opts.snippet(String.format("lat: %g\nlng: %g", currentPosition.latitude, currentPosition.longitude));
+            hereMarker = gMap.addMarker(opts);
+            if (gMap != null)
+                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, getResources().getInteger(R.integer.zoomFactor_button_here)));
+        } else
+            Log.d(TAG, "no current position available");
+    }
+});
     }
 
 
@@ -424,6 +428,7 @@ public class MapsActivity extends AppCompatActivity
         gMap.setOnMapLongClickListener(this);
         gMap.setOnCameraMoveStartedListener(this);
         gMap.setOnMarkerClickListener(this);
+        gMap.setOnInfoWindowClickListener(this);
 
         UiSettings uis = gMap.getUiSettings();
         uis.setZoomGesturesEnabled(true);
@@ -487,7 +492,6 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public boolean onMarkerClick(final Marker marker) {
         marker.showInfoWindow();
-
         button_car.setVisibility(View.VISIBLE);
         button_car.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -501,15 +505,40 @@ public class MapsActivity extends AppCompatActivity
         return false;
     }
 
-    /**
-     * Metodo di utilità che permette di posizionare rapidamente sulla mappa una lista di MapItem.
-     * Attenzione: l'oggetto gMap deve essere inizializzato, questo metodo va pertanto chiamato preferibilmente dalla
-     * callback onMapReady().
-     *
-     * @param l   la lista di oggetti di tipo I tale che I sia sottotipo di MapItem.
-     * @param <I> sottotipo di MapItem.
-     * @return ritorna la collection di oggetti Marker aggiunti alla mappa.
-     */
+
+    public void onInfoWindowClick(Marker marker) {
+
+       // scrollingActivity.setCurrentPosition(currentPosition);
+       // scrollingActivity.setMarkerPosition(marker.getPosition());
+        //runPlace1();
+
+        Intent scrollingPage = new Intent(this, ScrollingActivity.class);
+        scrollingPage.putExtra("MarkerPosition", marker.getPosition());
+        startActivity(scrollingPage);
+    }
+
+
+
+
+    protected void runPlace1(){
+        startActivity(new Intent(this, scrollingActivity.getClass()));
+    }
+
+
+
+    public void onInfoWindowClose(Marker marker) {
+        Toast.makeText(this, "Close Info Window", Toast.LENGTH_SHORT).show();
+    }
+
+        /**
+         * Metodo di utilità che permette di posizionare rapidamente sulla mappa una lista di MapItem.
+         * Attenzione: l'oggetto gMap deve essere inizializzato, questo metodo va pertanto chiamato preferibilmente dalla
+         * callback onMapReady().
+         *
+         * @param l   la lista di oggetti di tipo I tale che I sia sottotipo di MapItem.
+         * @param <I> sottotipo di MapItem.
+         * @return ritorna la collection di oggetti Marker aggiunti alla mappa.
+         */
     @NonNull
     protected <I extends MapItem> Collection<Marker> putMarkersFromMapItems(List<I> l) throws Exception {
         Collection<Marker> r = new ArrayList<>();
