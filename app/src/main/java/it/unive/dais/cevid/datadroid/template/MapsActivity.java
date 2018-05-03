@@ -524,9 +524,7 @@ public class MapsActivity extends AppCompatActivity
         startActivity(new Intent(this, scrollingActivity.getClass()));
     }
 
-
-
-    public void onInfoWindowClose(Marker marker) {
+    public void onInfoWindowClose(Marker markers) {
         Toast.makeText(this, "Close Info Window", Toast.LENGTH_SHORT).show();
     }
 
